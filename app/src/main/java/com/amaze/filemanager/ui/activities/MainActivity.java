@@ -112,6 +112,7 @@ import com.amaze.filemanager.ui.fragments.TabFragment;
 import com.amaze.filemanager.ui.fragments.preference_fragments.PreferencesConstants;
 import com.amaze.filemanager.ui.strings.StorageNamingHelper;
 import com.amaze.filemanager.ui.views.appbar.AppBar;
+import com.amaze.filemanager.ui.views.appbar.SearchView;
 import com.amaze.filemanager.ui.views.drawer.Drawer;
 import com.amaze.filemanager.utils.AppConstants;
 import com.amaze.filemanager.utils.BookSorter;
@@ -987,7 +988,7 @@ public class MainActivity extends PermissionsActivity
       menu.findItem(R.id.sethome).setVisible(false);
       if (indicator_layout != null) indicator_layout.setVisibility(View.GONE);
       findViewById(R.id.buttonbarframe).setVisibility(View.GONE);
-      menu.findItem(R.id.search).setVisible(false);
+      menu.findItem(R.id.search).setVisible(true);
       menu.findItem(R.id.home).setVisible(false);
       menu.findItem(R.id.history).setVisible(false);
       menu.findItem(R.id.extract).setVisible(false);
@@ -1023,6 +1024,21 @@ public class MainActivity extends PermissionsActivity
     // The action bar home/up action should open or close the drawer.
     // ActionBarDrawerToggle will take care of this.
     if (drawer.onOptionsItemSelected(item)) return true;
+
+    if (getFragmentAtFrame() instanceof AppsListFragment) {
+      switch (item.getItemId()) {
+        case R.id.sort:
+          GeneralDialogCreation.showSortDialog(
+              (AppsListFragment) getFragmentAtFrame(), getAppTheme());
+          break;
+        case R.id.search:
+          getAppbar().getSearchView().setSearchListener(appSearchListener);
+          getAppbar().getSearchView().revealSearchView();
+          break;
+        default:
+          break;
+      }
+    }
 
     // Handle action buttons
     executeWithMainFragment(
@@ -1060,12 +1076,6 @@ public class MainActivity extends PermissionsActivity
               break;
             case R.id.exit:
               finish();
-              break;
-            case R.id.sort:
-              Fragment fragment = getFragmentAtFrame();
-              if (fragment instanceof AppsListFragment) {
-                GeneralDialogCreation.showSortDialog((AppsListFragment) fragment, getAppTheme());
-              }
               break;
             case R.id.sortby:
               GeneralDialogCreation.showSortDialog(mainFragment, getAppTheme(), getPrefs());
@@ -1144,6 +1154,7 @@ public class MainActivity extends PermissionsActivity
               }
               break;
             case R.id.search:
+              getAppbar().getSearchView().setSearchListener(fileSearchListener);
               getAppbar().getSearchView().revealSearchView();
               break;
           }
@@ -1542,17 +1553,22 @@ public class MainActivity extends PermissionsActivity
     skinStatusBar = PreferenceUtils.getStatusColor(getPrimary());
   }
 
-  void initialiseViews() {
+  private final SearchView.SearchListener fileSearchListener =
+      queue -> {
+        if (!queue.isEmpty()) {
+          mainActivityHelper.search(getPrefs(), queue);
+        }
+      };
 
-    appbar =
-        new AppBar(
-            this,
-            getPrefs(),
-            queue -> {
-              if (!queue.isEmpty()) {
-                mainActivityHelper.search(getPrefs(), queue);
-              }
-            });
+  private final SearchView.SearchListener appSearchListener =
+      queue -> {
+        if (!queue.isEmpty() && getFragmentAtFrame() instanceof AppsListFragment) {
+          ((AppsListFragment) getFragmentAtFrame()).searchApp(queue);
+        }
+      };
+
+  void initialiseViews() {
+    appbar = new AppBar(this, getPrefs(), fileSearchListener);
     appBarLayout = getAppbar().getAppbarLayout();
 
     setSupportActionBar(getAppbar().getToolbar());

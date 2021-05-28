@@ -77,6 +77,10 @@ public class AppBar {
     return searchView;
   }
 
+  public void setSearchView(SearchView searchView) {
+    this.searchView = searchView;
+  }
+
   public BottomBar getBottomBar() {
     return bottomBar;
   }

@@ -62,12 +62,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filterable;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-public class AppsAdapter extends ArrayAdapter<AppDataParcelable> {
+public class AppsAdapter extends ArrayAdapter<AppDataParcelable> implements Filterable {
 
   private static final String COM_ANDROID_VENDING = "com.android.vending";
 
@@ -102,6 +103,7 @@ public class AppsAdapter extends ArrayAdapter<AppDataParcelable> {
     /*for (int i = 0; i < items.size(); i++) {
         myChecked.put(i, false);
     }*/
+
   }
 
   public void setData(List<AppDataParcelable> data) {

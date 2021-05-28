@@ -40,6 +40,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.ListFragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
@@ -160,6 +161,7 @@ public class AppsListFragment extends ListFragment
     }
   }
 
+  @NonNull
   @Override
   public Loader<AppListLoader.AppsDataPair> onCreateLoader(int id, Bundle args) {
     return new AppListLoader(getContext(), sortby, asc);
@@ -167,7 +169,7 @@ public class AppsListFragment extends ListFragment
 
   @Override
   public void onLoadFinished(
-      Loader<AppListLoader.AppsDataPair> loader, AppListLoader.AppsDataPair data) {
+      @NonNull Loader<AppListLoader.AppsDataPair> loader, AppListLoader.AppsDataPair data) {
     // set new data to adapter
     adapter.setData(data.first);
     modelProvider.setItemList(data.second);
@@ -184,5 +186,9 @@ public class AppsListFragment extends ListFragment
   @Override
   public void onLoaderReset(Loader<AppListLoader.AppsDataPair> loader) {
     adapter.setData(null);
+  }
+
+  public void searchApp(@NonNull String query) {
+    adapter.getFilter().filter(query);
   }
 }

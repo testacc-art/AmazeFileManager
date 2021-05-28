@@ -122,4 +122,27 @@ public final class AppDataParcelable implements Parcelable {
       return 0;
     }
   }
+
+  /**
+   * {@link android.widget.ArrayAdapter} has an {@link android.widget.Filter} which provides basic
+   * filtering functionalities, by splitting object's <code>toString()</code> value and search for
+   * strings prefixed with specified keyword.
+   *
+   * <p>Implementing toString() to match their requirement here, so we don't need to write a filter
+   * on our own.
+   *
+   * @see android.widget.ArrayAdapter.ArrayFilter#performFiltering
+   * @return String representation of the app, including label, package name and data
+   *     <p>FIXME: just package name and label is OK?
+   */
+  @Override
+  public String toString() {
+    return new StringBuilder()
+        .append(label)
+        .append(' ')
+        .append(packageName)
+        .append(' ')
+        .append(data)
+        .toString();
+  }
 }

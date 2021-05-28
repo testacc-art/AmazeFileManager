@@ -53,6 +53,7 @@ public class SearchView {
   private AppCompatEditText searchViewEditText;
   private ImageView clearImageView;
   private ImageView backImageView;
+  private SearchListener searchListener;
 
   private boolean enabled = false;
 
@@ -70,10 +71,11 @@ public class SearchView {
 
     backImageView.setOnClickListener(v -> appbar.getSearchView().hideSearchView());
 
+    setSearchListener(searchListener);
     searchViewEditText.setOnEditorActionListener(
         (v, actionId, event) -> {
           if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            searchListener.onSearch(searchViewEditText.getText().toString());
+            getSearchListener().onSearch(searchViewEditText.getText().toString());
             appbar.getSearchView().hideSearchView();
             return true;
           }
@@ -197,6 +199,14 @@ public class SearchView {
 
   public boolean isShown() {
     return searchViewLayout.isShown();
+  }
+
+  public void setSearchListener(SearchListener searchListener) {
+    this.searchListener = searchListener;
+  }
+
+  protected SearchListener getSearchListener() {
+    return searchListener;
   }
 
   public interface SearchListener {
