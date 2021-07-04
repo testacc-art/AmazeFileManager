@@ -29,7 +29,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 29
         versionCode 95
-        versionName "3.6.1"
+        versionName "3.7.0"
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
@@ -236,7 +236,7 @@ dependencies {
 
     implementation project(':commons_compress_7z')
     implementation project(':file_operations')
-    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.core:core-ktx:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "ch.acra:acra-core:5.7.0"
 }
