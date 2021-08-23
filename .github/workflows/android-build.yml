@@ -2,11 +2,6 @@ name: Android Build CI
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - '*'
-      - '!master'
-      - '!release/*'
     
 concurrency:
   group: build-${{ github.event.pull_request.number || github.ref }}
@@ -14,7 +9,12 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    name: Gradle ${{ matrix.operating-system }}
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-18.04, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -22,8 +22,6 @@ jobs:
         with:
           distribution: "adopt"
           java-version: 11
-      - name: Check formatting using spotless
-        run: ./gradlew spotlessCheck --stacktrace | grep -vE 'Transform|Build cache is disabled|history is available.'
       - name: Build with Gradle
         run: |
           ./gradlew assembledebug --stacktrace | grep -vE 'Transform|Build cache is disabled|history is available.'
