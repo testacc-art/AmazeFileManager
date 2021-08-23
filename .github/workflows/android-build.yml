@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -22,6 +22,7 @@ jobs:
         with:
           distribution: "adopt"
           java-version: 11
+          cache: gradle
       - name: Check formatting using spotless
         run: ./gradlew spotlessCheck --stacktrace | grep -vE 'Transform|Build cache is disabled|history is available.'
       - name: Build with Gradle
