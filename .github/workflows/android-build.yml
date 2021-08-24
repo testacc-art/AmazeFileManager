@@ -25,6 +25,6 @@ jobs:
           cache: gradle
       - name: Build with Gradle
         run: |
-          ./gradlew assembledebug --stacktrace | grep -vE 'Transform|Build cache is disabled|history is available.'
+          ./gradlew assembledebug --stacktrace --no-daemon | grep -vE 'Transform|Build cache is disabled|history is available.'
         env:
           TZ: UTC
